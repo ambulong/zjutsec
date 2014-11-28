@@ -1,0 +1,167 @@
+/index.php/action/
+/index.php/view/
+/index.php/api/
+
+action:
+	register
+	login
+	logout
+	report	//提交报告
+	upload	//上传图片/附件
+
+	//for admin
+	addReport
+	updateReport
+	delReport
+	addUser
+	delUser
+	updateUser
+view:
+	register
+	login
+	submit	//提交漏洞页
+	main	//报告中心
+	search	//搜索(管理员可搜索全部， 普通用户只可搜索公开内容)
+	reportList	//报告列表(搜索结果，自己/他人报告，漏洞分类)
+	users	//用户列表（即用户排名，内有报告数量排名，RANK排名，组织排名）
+	
+	admUsers
+	admEditReport
+	admEditUser
+	admConfig
+lib:
+	url
+	user
+		-add()*
+		-del()*
+		-validatePassword()*
+		-getPassword()*
+		-isExist(value, name|sid|email)*
+		-updatePassword(string)*
+		-updateAvatar();*
+		-getID(value, name|sid|email)*
+		-getDetail()*
+		-getSID()*
+		-getAvatar()*
+		-updateLabel()*
+		-getLable()*
+		-updateDesc()*
+		-getDesc()*
+		-updateURL()*
+		-getURL()*
+		-updateOrg()*
+		-getOrg()*
+		-updatePhone()*
+		-getPhone()*
+		-updateQQ()*
+		-getQQ()*
+		
+		-getReportNum(all|pub|confirmed)*
+		-getRank(pub|confirmed)
+		-getTags(pub|confirmed)
+		
+	tag*
+		-add(name)*
+		-del(SID|ID|name)*
+		-getSID(value, ID|name)*
+		-getID(value, SID|name)*
+		-getDetail(value, SID|ID|name)*
+		-getName(value, SID|ID)*
+		-updateName(value， id)*
+		-isExistName(name)*
+		-isExistID(id)*
+		-isExistSID(sid)*
+	config*
+		-getDetail()*
+		-update...()*
+		-get...()*
+	report
+		-add()*
+		-del()*
+		-getDetail()*
+		-update()*
+		-getTags()*	//id + sid + name
+		-update...()*
+		-get...()*
+		
+		-getList(all|pub|confirmed, value, %|tagid|tag|level|uid|uname|email|keyintitle|keyintext, offeset, rows)
+	bin*
+		-add(data);*
+	log*
+		-add(data);*
+api:
+	tag
+	addTag
+	delTag
+	updateTag
+inc:
+	functions
+	user
+		-isLogin()
+		-isAdmin()
+		-getName()
+		-getOrg()
+		-getLabel()
+		-getAvatar()
+		-getRank()
+		-getReportNum()
+		-getURL()
+		-getEmail()
+		...
+		
+	userhome
+		-getuName()
+		-getuOrg()
+		...
+	tag
+		-getTags(uid|default page user's or all tags)
+		-getAllTags
+	report
+		-getReportList()
+		-getReportDetail()
+	
+
+DB:
+config:
+	id, 
+	name, 
+	url, 
+	label(用来生成ZID), 
+	expiretime, 
+	alert(新报告提醒), 
+	alertmails（接受报告的邮箱）
+users:(不区分大小)
+	id, sid, role, username（不可改）, email（不可改）, password, avatar(base64), label, desc, url, org, phone, qq, time, mgmt_time, ext(最后登录的信息)
+tags：(不区分大小)
+	id, sid, name
+reports:(不区分大小)
+	id,
+	*sid,
+	nid(rand number > 5)(ZID-label-2014-NID),
+	*uid,
+	*anonymous,	//0不匿名 1匿名
+	*ori_title,
+	*ori_incharge,（负责人/部门/组织）
+	*ori_tags,
+	*ori_desc,
+	*ori_comment,(注释，可索要礼品或留言)
+	*ori_rank,
+	status, //状态 0.未处理 1.已确认 2.未能复现 3.BUG/危害太小 4.未在处理范围内 5.重复提交
+	level,	// 1低危 2中危 3高危
+	rank,
+	title,	//标题
+	incharge,	//负责人/部门/组织
+	tags,
+	summary,	//摘要
+	desc,	//详细描述
+	comment, //注释，所有人可见，比如如何评分或者管理员对漏洞的评价
+	resp,	//负责人的回复（对外可见）
+	note,	//只有提交者可见（未通过原因，或者需要联系方式）
+	time,
+	canbepub, //1可公开 0不可公开 默认超过pubtime&已确认自动公开(can be public)
+	mgmt_time,
+	*ext(提交者的信息)
+bin:(存放被删除的东西，用户/报告)
+	id, data(json 全部资料), operator(json 全部资料)， time, ext
+logs:
+	id data(json) time ext
